@@ -56,3 +56,54 @@ Route::resource('photos', PhotoController::class)->except([
 ]);
 
 Route::get('/greeting', [WelcomeController::class, 'greeting']);
+
+
+// Route Name 
+// route::get('/user/profile', function () { 
+//     // 
+//     })->name('profile'); 
+//     Route::get( 
+//     '/user/profile', 
+//     [UserProfileController::class, 'show'] 
+//     )->name('profile'); 
+//     // Generating URLs... 
+//     $url = route('profile'); 
+//     // Generating Redirects... 
+//     return redirect()->route('profile'); 
+
+
+//route Group dan Route Prefixes 
+// Route::middleware(['first', 'second'])->group(function () { 
+//     Route::get('/', function () { 
+//         // Uses first & second middleware... 
+//     }); 
+ 
+// Route::get('/user/profile', function () { 
+//         // Uses first & second middleware... 
+//     }); 
+// }); 
+ 
+// Route::domain('{account}.example.com')->group(function () { 
+//     Route::get('user/{id}', function ($account, $id) { 
+//         // 
+//     }); 
+// }); 
+ 
+// Route::middleware('auth')->group(function () { 
+//  Route::get('/user', [UserController::class, 'index']); 
+//  Route::get('/post', [PostController::class, 'index']); 
+//  Route::get('/event', [EventController::class, 'index']); 
+  
+// }); 
+
+// Route Prefixes 
+// Route::prefix('admin')->group(function () { 
+//     Route::get('/user', [UserController::class, 'index']); 
+//     Route::get('/post', [PostController::class, 'index']); 
+//     Route::get('/event', [EventController::class, 'index']); 
+    
+//    }); 
+
+
+// redirect Routes 
+//route::redirect('/here', '/there'); 
