@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,7 @@ class UserController extends Controller
 
         // //coba akses model UserModel
         // $user = UserModel::all();       //abil semua data dari tabel 'm_user'
-       
+
         // return view('user', ['data' => $user]);
 
         // $data = [
@@ -62,8 +63,60 @@ class UserController extends Controller
         // $user = UserModel::where('username', 'manager9')->firstOrFail();      
         // return view('user', ['data' => $user]);
 
-        $user = UserModel::where('level_id', 2)->count();      
-        // dd($user);
+        // $user = UserModel::where('level_id', 2)->count();      
+        // // dd($user);                                            //  Biasanya digunakan untuk debugging, Akan menampilkan nilai $user dan menghentikan eksekusi script.
+        // return view('user', ['data' => $user]);
+
+        // $user = UserModel::firstOrCreate(       //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan
+        //     [
+        //         'username'  => 'manager',       //username = manager
+        //         'nama'      => 'Manager',       //nama = Manager
+        //     ],
+        // );
+
+        // return view('user', ['data' => $user]);
+
+        // $user = UserModel::firstOrCreate(      //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan
+        //     [      
+        //         'username' => 'manager22',        
+        //         'nama' => 'Manager Dua Dua',        
+        //         'password' => Hash::make('12345'), 
+        //         'level_id' => 2                     
+        //     ],
+        // );
+
+        // return view('user', ['data' => $user]);
+
+        // $user = UserModel::firstOrNew(        //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database
+        //     [
+        //         'username' => 'manager',        //dengan username = manager
+        //         'nama'     => 'Manager',        //dengan nama = Manager 
+        //     ],
+        // );
+
+        // return view('user', ['data' => $user]);
+
+        //         $user = UserModel::firstOrNew(       //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database
+        //      [
+        //          'username' => 'manager33',                 
+        //          'nama'     => 'Manager Tiga Tiga',        
+        //          'password' => Hash::make('12345'),        
+        //          'level_id' => 2                           
+        //      ],
+        //  );
+
+        //  return view('user', ['data' => $user]);
+
+        $user = UserModel::firstOrNew(        //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database   
+            [
+                'username' => 'manager33',
+                'nama'     => 'Manager Tiga Tiga',
+                'password' => Hash::make('12345'),
+                'level_id' => 2
+            ],
+        );
+
+        $user->save();          //simpan ke database
         return view('user', ['data' => $user]);
     }
-    }
+}
