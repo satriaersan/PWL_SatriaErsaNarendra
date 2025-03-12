@@ -51,9 +51,15 @@ class UserController extends Controller
         // });
         // return view('user', ['data' => $user]);
 
-        $user = UserModel::findOr(20, ['username', 'nama'], function(){ //Mencari data dengan id = 20 dari tabel users
-            abort(404);                                                //tapi hanya mengambil kolom username dan nama
-        });
+        // $user = UserModel::findOr(20, ['username', 'nama'], function(){ //Mencari data dengan id = 20 dari tabel users
+        //     abort(404);                                                //tapi hanya mengambil kolom username dan nama
+        // });
+        // return view('user', ['data' => $user]);
+
+        // $user = UserModel::findOrFail(1);     
+        // return view('user', ['data' => $user]);
+
+        $user = UserModel::where('username', 'manager9')->firstOrFail();      
         return view('user', ['data' => $user]);
     }
     }
