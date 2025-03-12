@@ -57,15 +57,19 @@ class UserController extends Controller
         // });
         // return view('user', ['data' => $user]);
 
+
         // $user = UserModel::findOrFail(1);     
         // return view('user', ['data' => $user]);
+
 
         // $user = UserModel::where('username', 'manager9')->firstOrFail();      
         // return view('user', ['data' => $user]);
 
+
         // $user = UserModel::where('level_id', 2)->count();      
         // // dd($user);                                            //  Biasanya digunakan untuk debugging, Akan menampilkan nilai $user dan menghentikan eksekusi script.
         // return view('user', ['data' => $user]);
+
 
         // $user = UserModel::firstOrCreate(       //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan
         //     [
@@ -75,6 +79,7 @@ class UserController extends Controller
         // );
 
         // return view('user', ['data' => $user]);
+
 
         // $user = UserModel::firstOrCreate(      //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan
         //     [      
@@ -87,6 +92,7 @@ class UserController extends Controller
 
         // return view('user', ['data' => $user]);
 
+
         // $user = UserModel::firstOrNew(        //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database
         //     [
         //         'username' => 'manager',        //dengan username = manager
@@ -95,6 +101,7 @@ class UserController extends Controller
         // );
 
         // return view('user', ['data' => $user]);
+
 
         //         $user = UserModel::firstOrNew(       //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database
         //      [
@@ -107,16 +114,60 @@ class UserController extends Controller
 
         //  return view('user', ['data' => $user]);
 
-        $user = UserModel::firstOrNew(        //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database   
-            [
-                'username' => 'manager33',
-                'nama'     => 'Manager Tiga Tiga',
-                'password' => Hash::make('12345'),
-                'level_id' => 2
-            ],
-        );
 
-        $user->save();          //simpan ke database
-        return view('user', ['data' => $user]);
+        // $user = UserModel::firstOrNew(        //jika ada maka akan ditampilkan, jika tidak ada akan dibuatkan melalui browser tapi tidak ke database   
+        //     [
+        //         'username' => 'manager33',
+        //         'nama'     => 'Manager Tiga Tiga',
+        //         'password' => Hash::make('12345'),
+        //         'level_id' => 2
+        //     ],
+        // );
+
+        // $user->save();          //simpan ke database
+        // return view('user', ['data' => $user]);
+
+
+        // $user = UserModel::create([  //membuat data
+        //     'username'  => 'manager55',
+        //     'nama'      => 'Manager55',
+        //     'password'  => Hash::make('12345'),
+        //     'level_id'  => 2,
+        // ]);
+
+        // $user->username = 'manager56'; //merubah username dari manager55 menajadi manager66
+
+        // $user->isDirty();   //true karena terdapat perubahan
+        // $user->isDirty('username');    //true
+        // $user->isDirty('nama');     //false karena tidak ada perubahan
+        // $user->isDirty(['nama', 'username']);     //true
+
+        // $user->isClean();   //false
+        // $user->isClean('username');     //false
+        // $user->isClean('nama');     //true
+        // $user->isClean(['nama', 'username']);     //false
+
+        // $user->save();  //menyimpan data
+
+        // $user->isDirty();   //false
+        // $user->isClean();   //true
+        // dd($user->isDirty()); //menampilkan hasil ekspreksi
+
+
+          $user = UserModel::create([  //membuat data (semua data disimpan ke database)
+            'username'  => 'manager11',
+            'nama'      => 'Manager11',
+            'password'  => Hash::make('12345'),
+            'level_id'  => 2,
+        ]);
+
+        $user->username = 'manager12'; //merubah username dari manager11 menajadi manager12 (blm ke database)
+        $user->save();  //menyimpan ke database
+
+        $user->wasChanged();   //true
+        $user->wasChanged('username');     //true
+        $user->wasChanged(['username', 'level_id']);    //true
+        $user->wasChanged('nama');     //false
+        dd($user->wasChanged(['nama', 'username']));     //true
     }
 }
