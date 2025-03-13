@@ -171,47 +171,51 @@ class UserController extends Controller
         // dd($user->wasChanged(['nama', 'username']));     //true
 
 
-        $user = UserModel::all();         //mengambil semua data tabel 'm_user'
-        return view('user', ['data' => $user]);
-    }
-    public function tambah()
-    {
-        return view('user_tambah');
-    }
-    public function tambah_simpan(Request $request)  // menerima data dari form inputan
-    {
-        UserModel::create([             //menyimpan data ke database
-            'username' => $request->username,
-            'nama' => $request->nama,
-            'password' => Hash::make('$request->password'),
-            'level_id' => $request->level_id
-        ]);
+    //     $user = UserModel::all();         //mengambil semua data tabel 'm_user'
+    //     return view('user', ['data' => $user]);
+    // }
+    // public function tambah()
+    // {
+    //     return view('user_tambah');
+    // }
+    // public function tambah_simpan(Request $request)  // menerima data dari form inputan
+    // {
+    //     UserModel::create([             //menyimpan data ke database
+    //         'username' => $request->username,
+    //         'nama' => $request->nama,
+    //         'password' => Hash::make('$request->password'),
+    //         'level_id' => $request->level_id
+    //     ]);
 
-        return redirect('/user');       //return hasil ke view 'user'
-    }
-    public function ubah($id)    //ambil data berdasarkan ID yang dipilih
-    {
-        $user = UserModel::find($id);   //mencari data berdasarkan ID 
-        return view('user_ubah', ['data' => $user]);
-    }
-    public function ubah_simpan($id, Request $request)    //untuk menerima data dari form inputan 
-    {
-        $user = UserModel::find($id);           //cari data berdasarkan ID 
+    //     return redirect('/user');       //return hasil ke view 'user'
+    // }
+    // public function ubah($id)    //ambil data berdasarkan ID yang dipilih
+    // {
+    //     $user = UserModel::find($id);   //mencari data berdasarkan ID 
+    //     return view('user_ubah', ['data' => $user]);
+    // }
+    // public function ubah_simpan($id, Request $request)    //untuk menerima data dari form inputan 
+    // {
+    //     $user = UserModel::find($id);           //cari data berdasarkan ID 
 
-        $user->username = $request->username;
-        $user->nama     = $request->nama;
-        $user->password = Hash::make('$request->password');
-        $user->level_id = $request->level_id;
+    //     $user->username = $request->username;
+    //     $user->nama     = $request->nama;
+    //     $user->password = Hash::make('$request->password');
+    //     $user->level_id = $request->level_id;
 
-        $user->save();
+    //     $user->save();
 
-        return redirect('/user');
-    }
-    public function hapus($id)  //hapus data berdasarkan ID 
-    {        
-        $user = UserModel::find($id);  
-        $user->delete();        // menghapus dari database
+    //     return redirect('/user');
+    // }
+    // public function hapus($id)  //hapus data berdasarkan ID 
+    // {        
+    //     $user = UserModel::find($id);  
+    //     $user->delete();        // menghapus dari database
 
-        return redirect('/user');      
-    }
+    //     return redirect('/user');   
+       
+
+    $user = UserModel::with('level')->get();
+    return view('user', ['data' => $user]);
+     }
 }
