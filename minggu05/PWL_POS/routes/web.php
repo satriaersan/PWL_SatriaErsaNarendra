@@ -35,3 +35,4 @@ Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kat
 Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
 Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::resource('kategori', KategoriController::class);
+Route::get('/kategori/delete/{id}', [KategoriController::class, 'delete'])->name('kategori.delete');

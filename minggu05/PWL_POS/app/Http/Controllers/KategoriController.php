@@ -70,4 +70,9 @@ class KategoriController extends Controller
 
     return redirect()->route('kategori.index')->with('Berhasil','Kategori telah di-update!' );
   }
+
+  public function delete($id){
+    KategoriModel::where('kategori_id', $id)->delete();
+    return redirect(to: '/kategori');
+ }
 }
