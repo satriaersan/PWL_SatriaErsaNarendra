@@ -23,6 +23,12 @@
      public function dataTable(QueryBuilder $query): EloquentDataTable
      {
          return (new EloquentDataTable($query))
+            ->addColumn('action', function ($row) {
+                return '<a href="' . route('kategori.edit', $row->kategori_id) . '" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"><i> Edit
+                </a>';
+            })
+            ->rawColumns(['action'])
              // ->addColumn('action', 'kategori.action')
              ->setRowId('id');
      }
@@ -73,6 +79,11 @@
              Column::make('kategori_nama'),
              Column::make('created_at'),
              Column::make('updated_at'),
+             Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->widh(80)
+                ->addClass('text-center'),
          ];
      }
  
