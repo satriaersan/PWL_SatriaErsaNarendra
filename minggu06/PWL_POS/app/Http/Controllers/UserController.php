@@ -56,9 +56,9 @@ class UserController extends Controller
                 // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/user/' . $user->user_id) . '">'
                 //     . csrf_field() . method_field('DELETE') .
                 //     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                $btn  = '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> '; 
-                $btn .= '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/delete_ajax').'\')"  class="btn btn-danger btn-sm">Hapus</button> '; 
+                $btn  = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/delete_ajax') . '\')"  class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi']) // Memberitahu bahwa kolom aksi adalah HTML
@@ -206,15 +206,17 @@ class UserController extends Controller
         }
     }
 
-    public function create_ajax() {
+    public function create_ajax()
+    {
         $level = LevelModel::select('level_id', 'level_nama')->get();
 
         return view('user.create_ajax')->with('level', $level);
     }
 
-    public function store_ajax(Request $request) {
+    public function store_ajax(Request $request)
+    {
         // cek apakah request berupa ajax
-        if($request->ajax() || $request->wantsJson()) {
+        if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'level_id' => 'required|integer',
                 'username' => 'required|string|min:3|unique:m_user,username',
@@ -223,32 +225,33 @@ class UserController extends Controller
             ];
 
             $validator = Validator::make($request->all(), $rules);
-    
-            if($validator->fails()) {
+
+            if ($validator->fails()) {
                 return response()->json([
                     'status' => false, // response status, false: error/gagal, true: berhasil
                     'message' => 'Validasi gagal',
                     'msgField' => $validator->errors(), // pesan error validasi
                 ]);
             }
-    
+
             // UserModel::create($request->all()); PERBAIKAN KODE ADA DI BAWAH
 
             $dataBaru = $request->all();
             $dataBaru['password'] = Hash::make($request->password);
 
             UserModel::create($dataBaru);
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data user berhasil disimpan'
             ]);
         }
-    
+
         redirect('/');
-    }   
-    
-    public function edit_ajax(string $id) {
+    }
+
+    public function edit_ajax(string $id)
+    {
         $user = UserModel::find($id);
         $level = LevelModel::select('level_id', 'level_nama')->get();
 
@@ -286,6 +289,34 @@ class UserController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+
+    public function confirm_ajax(string $id)
+    {
+        $user = UserModel::find($id);
+
+        return view('user.confirm_ajax', ['user' => $user]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        // cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
+            $user = UserModel::find($id);
+            if ($user) {
+                $user->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil dihapus'
                 ]);
             } else {
                 return response()->json([
