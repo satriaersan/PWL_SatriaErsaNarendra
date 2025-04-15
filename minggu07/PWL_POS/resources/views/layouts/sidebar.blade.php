@@ -65,6 +65,13 @@
                     <p>Transaksi Penjualan</p>
                 </a>
             </li>
+            <li class="nav-header">Tindakan</li>    
+            <li class="nav-item">
+              <a href="{{ url('/logout') }}" class="nav-link {{ ($activeMenu == 'logout') ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-angle-left"></i>
+                  <p>Logout</p>
+              </a>
+          </li>
         </ul>
     </nav>
 </div>
