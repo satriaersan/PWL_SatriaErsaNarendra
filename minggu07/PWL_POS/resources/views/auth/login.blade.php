@@ -62,6 +62,14 @@
                         <!-- /.col -->
                     </div>
                 </form>
+                <div class="mt-3 text-center">
+                    <p>
+                      Belum punya akun? 
+                      <a href="{{ route('register') }}">
+                        Daftar sekarang
+                      </a>
+                    </p>
+                  </div>
             </div>
             <!-- /.card-body -->
         </div>
@@ -95,7 +103,7 @@
                 rules: {
                     username: {
                         required: true,
-                        minlength: 4,
+                        minlength: 3,
                         maxlength: 20
                     },
                     password: {
