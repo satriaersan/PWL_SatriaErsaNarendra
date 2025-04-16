@@ -258,6 +258,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
         Route::get('/import', [SupplierController::class, 'import']);                     //ajax form upload excel
         Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);          //ajax import excel
+
+        Route::get('/export_excel', [SupplierController::class, 'export_excel']);         //export_excel  
         
         Route::delete('/{id}', [SupplierController::class, 'destroy']);
     });
