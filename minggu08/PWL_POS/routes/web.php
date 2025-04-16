@@ -150,7 +150,7 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('register', [AuthController::class, 'register'])->name('register');
- Route::post('register', [AuthController::class, 'postRegister']);
+Route::post('register', [AuthController::class, 'postRegister']);
 
 Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
     // masukkan semua route yang perlu autentikasi di sini
@@ -176,6 +176,9 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']);       //menampilkan form confirm delete user ajax
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']);     //menghapus data user ajax
 
+        Route::get('/import', [UserController::class, 'import']);                     //ajax form upload excel
+        Route::post('/import_ajax', [UserController::class, 'import_ajax']);          //ajax import excel
+        
         Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
     });
 
