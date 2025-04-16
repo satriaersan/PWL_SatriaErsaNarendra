@@ -178,7 +178,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
         Route::get('/import', [UserController::class, 'import']);                     //ajax form upload excel
         Route::post('/import_ajax', [UserController::class, 'import_ajax']);          //ajax import excel
-        
+
         Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
     });
 
@@ -225,6 +225,9 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);       //menampilkan form confirm delete kategori ajax
         Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);     //menghapus data kategori ajax
 
+        Route::get('/import', [KategoriController::class, 'import']);                     //ajax form upload excel
+        Route::post('/import_ajax', [KategoriController::class, 'import_ajax']);          //ajax import excel
+
         Route::delete('/{id}', [KategoriController::class, 'destroy']);
     });
 
@@ -246,6 +249,10 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']);    //menyimpan perubahan data supplier ajax
         Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);       //menampilkan form confirm delete supplier ajax
         Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);     //menghapus data supplier ajax
+
+        Route::get('/import', [SupplierController::class, 'import']);                     //ajax form upload excel
+        Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);          //ajax import excel
+        
         Route::delete('/{id}', [SupplierController::class, 'destroy']);
     });
 
