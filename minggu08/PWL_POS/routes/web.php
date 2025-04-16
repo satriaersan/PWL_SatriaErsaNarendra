@@ -232,6 +232,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/import', [KategoriController::class, 'import']);                     //ajax form upload excel
         Route::post('/import_ajax', [KategoriController::class, 'import_ajax']);          //ajax import excel
 
+        Route::get('/export_excel', [KategoriController::class, 'export_excel']);         //export_excel  
+
         Route::delete('/{id}', [KategoriController::class, 'destroy']);
     });
 
