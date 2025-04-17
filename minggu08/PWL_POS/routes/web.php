@@ -208,6 +208,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
         Route::get('/export_excel', [LevelController::class, 'export_excel']);         //export_excel 
 
+        Route::get('/export_pdf', [LevelController::class, 'export_pdf']);         //export_pdf  
+
         Route::delete('/{id}', [LevelController::class, 'destroy']);
     });
 

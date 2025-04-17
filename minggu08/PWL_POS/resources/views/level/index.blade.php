@@ -130,6 +130,7 @@
                 <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import Level</button>
                 {{-- <a href="{{ url('/level/create') }}" class="btn btn-primary">Tambah Data</a> --}}
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/export_excel') }}"><i class="fa fa-file-excel"></i> Export Level</a>
+                <a class="btn btn-sm btn-secondary mt-1" href="{{ url('level/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export Level (PDF)</a>
                 <button onclick="modalAction('{{ url('level/create_ajax') }}')" class="btn  btn-success ">Tambah
                     Ajax</button>
             </div>
