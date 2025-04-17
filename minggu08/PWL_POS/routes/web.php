@@ -237,6 +237,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
         Route::get('/export_excel', [KategoriController::class, 'export_excel']);         //export_excel  
 
+        Route::get('/export_pdf', [KategoriController::class, 'export_pdf']);         //export_pdf 
+
         Route::delete('/{id}', [KategoriController::class, 'destroy']);
     });
 
@@ -262,7 +264,9 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/import', [SupplierController::class, 'import']);                     //ajax form upload excel
         Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);          //ajax import excel
 
-        Route::get('/export_excel', [SupplierController::class, 'export_excel']);         //export_excel  
+        Route::get('/export_excel', [SupplierController::class, 'export_excel']);         //export_excel 
+        
+        Route::get('/export_pdf', [SupplierController::class, 'export_pdf']);         //export_pdf
         
         Route::delete('/{id}', [SupplierController::class, 'destroy']);
     });
