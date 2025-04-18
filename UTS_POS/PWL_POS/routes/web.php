@@ -157,10 +157,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
     Route::get('/', [WelcomeController::class, 'index']);
 
 
-    Route::group(['prefix' => 'user'], function () {
-        Route::get('/profile', [UserController::class, 'profile']);
-        Route::get('/profile_ajax', [UserController::class, 'profile_ajax']);
-        Route::post('/profile_update', [UserController::class, 'profile_update']);
+    
+       
         // Route::group(['prefix' => 'user'], function () {
         Route::prefix('user')->middleware(['authorize:ADM'])->group(function () {
             Route::get('/', [UserController::class, 'index']);          // menampilkan halaman awal user
@@ -168,6 +166,10 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::get('/create', [UserController::class, 'create']);   // menampilkan halaman form tambah user
             Route::post('/', [UserController::class, 'store']);         // menyimpan data user baru 
 
+            Route::get('/profile', [UserController::class, 'profile']);
+            Route::get('/profile_ajax', [UserController::class, 'profile_ajax']);
+            Route::post('/profile_update', [UserController::class, 'profile_update']);
+            
             Route::get('/create_ajax', [UserController::class, 'create_ajax']);     //menampilkan halaman form tambah user ajax
             Route::post('/ajax', [UserController::class, 'store_ajax']);            //menyimpan data user baru ajax
 
@@ -189,7 +191,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
             Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
         });
-    });
+    
 
 
     Route::prefix('level')->middleware(['authorize:ADM'])->group(function () {
