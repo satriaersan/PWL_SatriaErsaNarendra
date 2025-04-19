@@ -44,11 +44,11 @@ class SupplierController extends Controller
                 //   $btn .= '<form class="d-inline-block" method="POST" action="' . url('/supplier/' . $supplier->id) . '">'
                 //       . csrf_field() . method_field('DELETE') .
                 //       '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                $btn = '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->id .
+                $btn = '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->id .
+                $btn .= '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->id .
+                $btn .= '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
@@ -196,7 +196,7 @@ class SupplierController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'supplier_kode' => 'required|string|max:10|unique:m_supplier,supplier_kode,' . $id . ',id',
+                'supplier_kode' => 'required|string|max:10|unique:m_supplier,supplier_kode,' . $id . ',supplier_id',
                 'supplier_nama' => 'required|string|max:100',
             ];
 
@@ -330,7 +330,7 @@ class SupplierController extends Controller
     {
         // ambil data barang yang akan di export
         $barang = SupplierModel::select('supplier_kode', 'supplier_nama', 'supplier_alamat')
-            ->orderBy('id')
+            ->orderBy('supplier_id')
             ->get();
 
         // load library excel
@@ -380,7 +380,7 @@ class SupplierController extends Controller
     public function export_pdf()
     {
         $barang = SupplierModel::select('supplier_kode', 'supplier_nama', 'supplier_alamat')
-            ->orderBy('suppllier_id')
+            ->orderBy('supplier_id')
             ->get();
         $pdf = Pdf::loadView('supplier.export_pdf', ['barang' => $barang]);
         $pdf->setPaper('A4', 'portrait');
