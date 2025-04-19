@@ -30,7 +30,7 @@ class SupplierController extends Controller
 
     public function list(Request $request)
     {
-        $supplier = SupplierModel::select('id', 'supplier_kode', 'supplier_nama');
+        $supplier = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama');
 
         if ($request->supplier_nama) {
             $supplier->where('supplier_nama', 'like', '%' . $request->supplier_nama . '%');
@@ -380,7 +380,7 @@ class SupplierController extends Controller
     public function export_pdf()
     {
         $barang = SupplierModel::select('supplier_kode', 'supplier_nama', 'supplier_alamat')
-            ->orderBy('id')
+            ->orderBy('suppllier_id')
             ->get();
         $pdf = Pdf::loadView('supplier.export_pdf', ['barang' => $barang]);
         $pdf->setPaper('A4', 'portrait');

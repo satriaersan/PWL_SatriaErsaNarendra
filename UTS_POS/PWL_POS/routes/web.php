@@ -9,6 +9,7 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
@@ -320,5 +321,19 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']); // Untuk hapus data user Ajax
 
         Route::delete('/{id}', [StokController::class, 'destroy']);       // Menghapus data user
+    });
+
+    Route::group(['prefix' => 'penjualan'], function () {
+        Route::get('/', [SalesController::class, 'index']);                // Menampilkan halaman awal user
+        Route::post('/list', [SalesController::class, 'list']);            // Menampilkan data user dalam bentuk json untuk datatable
+        Route::get('/create_ajax', [SalesController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
+        Route::post('/ajax', [SalesController::class, 'store_ajax']);      // Menyimpan data user baru Ajax
+        Route::get('/{id}', [SalesController::class, 'show']);             // Menampilkan detail user
+        Route::get('/{id}/edit_ajax', [SalesController::class, 'edit_ajax']); // Menampilkan halaman form edit user Ajax
+        Route::put('/{id}/update_ajax', [SalesController::class, 'update_ajax']); // Menyimpan perubahan data user Ajax
+        Route::get('/{id}/delete_ajax', [SalesController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete user Ajax
+        Route::delete('/{id}/delete_ajax', [SalesController::class, 'delete_ajax']); // Untuk hapus data user Ajax
+
+        Route::delete('/{id}', [SalesController::class, 'destroy']);       // Menghapus data user
     });
 });

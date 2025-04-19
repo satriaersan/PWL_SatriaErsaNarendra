@@ -2,148 +2,302 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
+use App\Models\PenjualanModel;
+use App\Models\UserModel;
 use Illuminate\Support\Facades\DB;
-use App\Models\LevelModel;
-use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Validator;
+;
 
 class SalesController extends Controller
 {
     public function index()
     {
+        // $breadcrumb = (object)[
+        //     'title' => 'Data Penjualan',
+        //     'list' => ['Home', 'Penjualan']
+        // ];
+
+        // $page = (object)[
+        //     'title' => 'Daftar Penjualan'
+        // ];
+
+        // $penjualan = PenjualanModel::all();
+        
+        // $activeMenu = 'penjualan';
+
+        // return view('penjualan.index', compact('breadcrumb', 'page', 'penjualan', 'activeMenu'));
         $breadcrumb = (object) [
-            'title' => 'Daftar Level',
-            'list' => ['Home', 'Level']
+            'title' => 'Daftar Penjualan',
+            'list'  => ['Home', 'Penjualan']
         ];
 
         $page = (object) [
-            'title' => 'Daftar level yang terdaftar dalam sistem'
+            'title' => 'Daftar penjualan yang terdaftar dalam sistem'
         ];
 
-
-        $activeMenu = 'level'; // set menu yang sedang aktif
-
-        return view('level.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
-    }
-
-    public function list(Request $request)
-    {
-        $level = LevelModel::select('level_id', 'level_kode', 'level_nama');
+        $activeMenu = 'penjualan';
 
 
-        return DataTables::of($level)
+        $users = UserModel::all();
 
-            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
-            ->addIndexColumn()
-            ->addColumn('aksi', function ($level) { // menambahkan kolom aksi
-
-                $btn = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/level/' . $level->level_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/level/' . $level->level_id) . '">'
-                    . csrf_field() . method_field('DELETE') .
-                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
-                return $btn;
-            })
-            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
-            ->make(true);
+        return view('penjualan.index', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'users'      => $users,
+            'activeMenu' => $activeMenu
+        ]);
+        
     }
 
     public function create()
     {
-        $breadcrumb = (object) [
-            'title' => 'Tambah Level',
-            'list' => ['Home', 'Level', 'Tambah']
+        $users = DB::table('m_user')->get(); // Mengambil semua data pengguna
+        $breadcrumb = (object)[
+            'title' => 'Tambah Penjualan',
+            'list' => ['Home', 'Penjualan', 'Tambah']
         ];
 
-        $page = (object) [
-            'title' => 'Tambah level baru'
+        $page = (object)[
+            'title' => 'Tambah data penjualan baru'
         ];
 
-        $activeMenu = 'level'; // set menu yang sedang aktif
+        $activeMenu = 'penjualan';
 
-        return view('level.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('penjualan.create', compact('breadcrumb', 'page', 'activeMenu','users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'level_kode' => 'required|string|max:10|unique:m_level,level_kode',
-            'level_nama' => 'required|string|max:100'
+            'tanggal_penjualan' => 'required|date',
+            'penjualan_kode' => 'required',
+            'pembeli' => 'required',
+            'user_id' => 'required|exists:m_user,user_id',
         ]);
 
-        LevelModel::create([
-            'level_kode' => $request->level_kode,
-            'level_nama' => $request->level_nama
-        ]);
+        
+        PenjualanModel::create($request->all());
 
-        return redirect('/level')->with('success', 'Data level berhasil disimpan');
+        return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
     }
 
-    public function show(string $id)
+    public function show($id)
     {
-        $level = LevelModel::find($id);
+        $penjualan = PenjualanModel::find($id);
 
-        $breadcrumb = (object) [
-            'title' => 'Detail Level',
-            'list' => ['Home', 'Level', 'Detail']
+        $breadcrumb = (object)[
+            'title' => 'Detail Penjualan',
+            'list' => ['Home', 'Penjualan', 'Detail']
         ];
 
-        $page = (object) [
-            'title' => 'Detail level'
+        $page = (object)[
+            'title' => 'Detail data penjualan'
         ];
+        $users = DB::table('m_user')->get(); // Mengambil semua data pengguna
+        $activeMenu = 'penjualan';
 
-        $activeMenu = 'level'; // set menu yang sedang aktif
-
-        return view('level.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
+        return view('penjualan.show', compact('breadcrumb', 'page', 'penjualan', 'activeMenu','users'));
     }
 
-    public function edit(string $id)
+    public function edit($id)
     {
-        $level = LevelModel::find($id);
+        $penjualan = PenjualanModel::find($id);
 
-
-        $breadcrumb = (object) [
-            'title' => 'Edit Level',
-            'list' => ['Home', 'Level', 'Edit']
+        $breadcrumb = (object)[
+            'title' => 'Edit Penjualan',
+            'list' => ['Home', 'Penjualan', 'Edit']
         ];
 
-        $page = (object) [
-            'title' => 'Edit level'
+        $page = (object)[
+            'title' => 'Edit data penjualan'
         ];
+        $users = DB::table('m_user')->get(); // Mengambil semua data pengguna
+        $activeMenu = 'penjualan';
 
-        $activeMenu = 'level'; // set menu yang sedang aktif
-
-        return view('level.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
+        return view('penjualan.edit', compact('breadcrumb', 'page', 'penjualan', 'activeMenu','users'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'level_kode' => 'required|string|max:10|unique:m_level,level_kode,' . $id . ',level_id',
-            'level_nama' => 'required|string|max:100'
+            'tanggal_penjualan' => 'required|date',
+            'penjualan_kode' => 'required',
+            'pembeli' => 'required',
+            'user_id' => 'required|exists:m_user,user_id',
         ]);
 
-        LevelModel::find($id)->update([
-            'level_kode' => $request->level_kode,
-            'level_nama' => $request->level_nama
-        ]);
+        PenjualanModel::find($id)->update($request->all());
 
-        return redirect('/level')->with('success', 'Data level berhasil diubah');
+        return redirect('/penjualan')->with('success', 'Data penjualan berhasil diubah');
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $check = LevelModel::find($id);
+        $check = PenjualanModel::find($id);
+
         if (!$check) {
-            return redirect('/level')->with('error', 'Data level tidak ditemukan');
+            return redirect('/penjualan')->with('error', 'Data penjualan tidak ditemukan');
         }
 
         try {
-            LevelModel::destroy($id);
-            return redirect('/level')->with('success', 'Data level berhasil dihapus');
+            PenjualanModel::destroy($id);
+            return redirect('/penjualan')->with('success', 'Data penjualan berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
-            // Jika terjadi error ketika menghapus data, redirect kembali ke halaman dengan membawa pesan error
-            return redirect('/level')->with('error', 'Data level gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/penjualan')->with('error', 'Gagal menghapus data penjualan karena masih terhubung dengan tabel lain');
         }
     }
+
+    public function list(Request $request)
+    {
+        $data = PenjualanModel::with('user')->orderBy('penjualan_id', 'ASC');
+        
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($p) {
+                
+
+                $btn = '<button onclick="modalAction(\'' . url('/penjualan/' . $p->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $p->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $p->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button>';
+                 return $btn;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
+    }
+
+    public function confirm_ajax(string $id)
+     {
+         $penjualan = PenjualanModel::with('user')->find($id);
+ 
+         return view('penjualan.confirm_ajax', ['penjualan' => $penjualan]);
+     }
+
+     public function delete_ajax(Request $request, $id)
+     {
+         // Mengecek apakah request dari ajax
+         if ($request->ajax() || $request->wantsJson()) {
+             $penjualan = PenjualanModel::find($id);
+             if ($penjualan) {
+                 try {
+                     $penjualan->delete();
+                     return response()->json([
+                         'status' => true,
+                         'message' => 'Data berhasil dihapus'
+                     ]);
+                 } catch (\Illuminate\Database\QueryException $e) {
+                     return response()->json([
+                         'status' => false,
+                         'message' => 'Data tidak bisa dihapus'
+                     ]);
+                 }
+             } else {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Data tidak ditemukan'
+                 ]);
+             }
+         }
+         return redirect('/');
+     }
+
+     public function edit_ajax(string $id)
+    {
+        $penjualan = PenjualanModel::find($id);
+        $user = UserModel::select('user_id', 'nama')->get();
+
+        return view('penjualan.edit_ajax', [
+            'penjualan' => $penjualan,
+            'user' => $user,
+        ]);
+    }
+
+     public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'penjualan_kode'    => ['required', 'string','max:10'],
+                'pembeli'  => ['required', 'string'], 
+                'tanggal_penjualan' => ['required', 'date'],
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $penjualan = PenjualanModel::find($id);
+            if ($penjualan) {
+                $penjualan->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data Penjualan berhasil diupdate.',
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
+            ]);
+        }
+    }
+    
+    public function create_ajax()
+    {
+        return view('penjualan.create_ajax');
+    }
+
+    // Simpan data stok baru
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+
+            $rules = [
+                'pembeli'           => ['required', 'string', 'max:100'],
+                'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
+                'tanggal_penjualan' => ['required', 'date'],
+            ];
+            
+
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $data = $request->all();
+            $data['user_id'] = auth()->id();
+
+            PenjualanModel::create($data);
+
+
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data stok berhasil disimpan.',
+            ]);
+        }
+    }
+
+    public function show_ajax(string $id)
+     {
+         $penjualan = PenjualanModel::with('user')->find($id);
+        
+         return view('penjualan.show_ajax', ['penjualan' => $penjualan]);
+     }
+
+
 }
