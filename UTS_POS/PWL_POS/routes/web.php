@@ -321,6 +321,9 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::get('/{id}/delete_ajax', [StokController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete user Ajax
         Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']); // Untuk hapus data user Ajax
 
+        Route::get('/import', [StokController::class, 'import']);                     //ajax form upload excel
+        Route::post('/import_ajax', [StokController::class, 'import_ajax']);          //ajax import excel
+
         Route::delete('/{id}', [StokController::class, 'destroy']);       // Menghapus data user
     });
 
