@@ -126,11 +126,11 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info">Import Kategori</button>
+                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-sm mt-1 btn-info">Import Excel</button>
                 {{-- <a href="{{ url('/kategori/create') }}" class="btn btn-primary">Tambah Data</a> --}}
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/export_excel') }}"><i class="fa fa-file-excel"></i> Export Kategori</a>
-                <a class="btn btn-sm btn-secondary mt-1" href="{{ url('kategori/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export Kategori (PDF)</a>
-                <button onclick="modalAction('{{ url('kategori/create_ajax') }}')" class="btn btn-success ">Tambah Data
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/export_excel') }}"><i class="fa fa-file-excel"></i> Export Excel</a>
+                <a class="btn btn-sm btn-secondary mt-1" href="{{ url('kategori/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export PDF</a>
+                <button onclick="modalAction('{{ url('kategori/create_ajax') }}')" class="btn btn-sm mt-1 btn-success ">Tambah Data
                     (Ajax)</button>
             </div>
         </div>

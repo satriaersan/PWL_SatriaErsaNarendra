@@ -127,11 +127,10 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import Level</button>
-                {{-- <a href="{{ url('/level/create') }}" class="btn btn-primary">Tambah Data</a> --}}
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/export_excel') }}"><i class="fa fa-file-excel"></i> Export Level</a>
-                <a class="btn btn-sm btn-secondary mt-1" href="{{ url('level/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export Level (PDF)</a>
-                <button onclick="modalAction('{{ url('level/create_ajax') }}')" class="btn  btn-success ">Tambah
+                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-sm mt-1 btn-info">Import Excel</button>
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/export_excel') }}"><i class="fa fa-file-excel"></i> Export Excel</a>
+                <a class="btn btn-sm btn-secondary mt-1" href="{{ url('level/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export PDF</a>
+                <button onclick="modalAction('{{ url('level/create_ajax') }}')" class="btn btn-sm mt-1 btn-success ">Tambah
                     Ajax</button>
             </div>
         </div>
@@ -171,7 +170,7 @@
             var dataLevel;
             $(document).ready(function() {
                 dataLevel = $('#table_level').DataTable({
-                    // serverSide: true, jika ingin menggunakan server side processing
+             
                     serverSide: true,
                     ajax: {
                         "url": "{{ url('level/list') }}",

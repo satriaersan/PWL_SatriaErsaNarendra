@@ -374,4 +374,11 @@ class LevelController extends Controller
 
         return $pdf->stream('Data Level_' . date('Y-m-d H:i:s') . '.pdf');
     }
+
+    public function show_ajax(string $id)
+    {
+        $level = LevelModel::find($id);
+
+        return view('level.show_ajax', ['level' => $level]);
+    }
 }

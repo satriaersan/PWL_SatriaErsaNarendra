@@ -281,7 +281,6 @@ namespace App\Http\Controllers;
         return view('stok.edit_ajax', [
             'stok' => $stok,
             'barang' => $barang,
-            'supplier_id' => $supplier,
             'user' => $user,
             'supplier' => $supplier,
         ]);
@@ -294,7 +293,7 @@ namespace App\Http\Controllers;
             $rules = [
                 'barang_id'    => ['required', 'integer', 'exists:m_barang,barang_id'],
                 'user_id'      => ['required', 'integer', 'exists:m_user,user_id'],
-                'supplier_id'            => ['required', 'integer', 'exists:m_supplier,id'], // validasi supplier
+                'supplier_id'            => ['required', 'integer', 'exists:m_supplier,supplier_id'], // validasi supplier
                 'stok_tanggal_masuk' => ['required', 'date'],
                 'stok_jumlah'  => ['required', 'integer', 'min:1'],
             ];

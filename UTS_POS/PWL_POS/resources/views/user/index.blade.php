@@ -168,11 +168,11 @@
       <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
-          <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import Level</button>
+          <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-sm mt-1 btn-info">Import Excel</button>
           {{-- <a href="{{ url('/user/create') }}" class="btn btn-primary">Tambah Data</a> --}}
-          <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/export_excel') }}"><i class="fa fa-file-excel"></i> Export User</a>
-          <a class="btn btn-sm btn-secondary mt-1" href="{{ url('user/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export User (PDF)</a>
-          <button onclick="modalAction('{{url ('user/create_ajax')}}')" class="btn btn-success ">Tambah Ajax</button>
+          <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/export_excel') }}"><i class="fa fa-file-excel"></i> Export Excel</a>
+          <a class="btn btn-sm btn-secondary mt-1" href="{{ url('user/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export PDF</a>
+          <button onclick="modalAction('{{url ('user/create_ajax')}}')" class="btn btn-sm mt-1 btn-success ">Tambah Ajax</button>
         </div>
       </div>
       <div class="card-body">

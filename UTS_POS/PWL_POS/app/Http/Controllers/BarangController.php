@@ -32,32 +32,38 @@ class BarangController extends Controller
 
     public function list(Request $request)
     {
-        $barang = BarangModel::select('barang_id', 'barang_kode', 'barang_nama', 'kategori_id', 'harga_jual', 'harga_beli')->with('kategori');
-
-        if ($request->kategori_id) {
-            $barang->where('kategori_id', $request->kategori_id);
+        $barang = BarangModel::select('barang_id', 'barang_kode', 'barang_nama', 'kategori_id', 'harga_jual', 'harga_beli')
+            ->with('kategori');
+    
+        //  Filter kategori
+        if ($request->filter_kategori) {
+            $barang->where('kategori_id', $request->filter_kategori);
         }
+    
+        // Pencarian global (search box DataTables)
+        if ($request->search['value']) {
+            $search = $request->search['value'];
+            $barang->where(function($q) use ($search) {
+                $q->where('barang_kode', 'like', "%{$search}%")
+                  ->orWhere('barang_nama', 'like', "%{$search}%");
+            });
+        }
+    
+  return DataTables::of($barang)
+    ->addIndexColumn()
+    ->addColumn('aksi', function ($barang) {
+        $btn = '<div class="d-flex justify-content-center gap-1 flex-wrap">';
+        $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button>';
+        $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button>';
+        $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button>';
+        $btn .= '</div>';
+        return $btn;
+    })
+    ->rawColumns(['aksi'])
+    ->make(true);
 
-        return DataTables::of($barang)
-            ->addIndexColumn()
-            ->addColumn('aksi', function ($barang) {
-                // $btn = '<a href="' . url('/barang/' . $barang->barang_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                // $btn .= '<a href="' . url('/barang/' . $barang->barang_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/barang/' . $barang->barang_id) . '">'
-                //     . csrf_field() . method_field('DELETE') .
-                //     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-
-                $btn = '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id .
-                    '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id .
-                    '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id .
-                    '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
-                return $btn;
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
     }
+    
 
     public function create()
     {
@@ -411,4 +417,12 @@ class BarangController extends Controller
 
         return $pdf->stream('Data Barang_' . date('Y-m-d H:i:s') . '.pdf');
     }
+
+    public function show_ajax(string $id)
+    {
+        $barang = BarangModel::with('kategori')->find($id);
+
+        return view('barang.show_ajax', ['barang' => $barang]);
+    }
+
 }

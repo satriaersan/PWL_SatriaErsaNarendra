@@ -170,10 +170,10 @@
     <div class="card-header">
         <h3 class="card-title">Daftar Barang</h3>
         <div class="card-tools">
-            <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-info">Import Barang</button>
-            <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/export_excel') }}"><i class="fa fa-file-excel"></i> Export Barang</a>
-            <a class="btn btn-sm btn-secondary mt-1" href="{{ url('barang/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export Barang (PDF)</a>
-            <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
+            <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-sm mt-1 btn-info">Import Excel</button>
+            <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/export_excel') }}"><i class="fa fa-file-excel"></i> Export Excel</a>
+            <a class="btn btn-sm btn-secondary mt-1" href="{{ url('barang/export_pdf') }}"><i class="fa fa-file-pdf"></i> Export PDF</a>
+            <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm mt-1 btn-success">Tambah Data (Ajax)</button>
         </div>
     </div>
     <div class="card-body">
@@ -257,7 +257,7 @@
             },{
                 data: "barang_nama",
                 className: "",
-                width: "37%",
+                width: "10%",
                 orderable: true,
                 searchable: true,
             },{

@@ -58,22 +58,22 @@
                     <!-- Pilih Supplier -->
                     <div class="form-group">
                         <label>Supplier</label>
-                        <select name="id" id="id" class="form-control" required>
+                        <select name="supplier_id" id="supplier_id" class="form-control" required>
                             <option value="">- Pilih Supplier -</option>
                             @foreach ($supplier as $s)
-                                <option value="{{ $s->id }}" {{ $s->id == $stok->id ? 'selected' : '' }}>
+                                <option value="{{ $s->supplier_id }}" {{ $s->supplier_id == $stok->supplier_id ? 'selected' : '' }}>
                                     {{ $s->supplier_nama }}
                                 </option>
                             @endforeach
                         </select>
-                        <small id="error-id" class="error-text form-text text-danger"></small>
+                        <small id="error-supplier_id" class="error-text form-text text-danger"></small>
                     </div>
                     <!-- Tanggal Stok Masuk -->
                     <div class="form-group">
                         <label>Tanggal Masuk</label>
-                        <<input type="datetime-local" name="stok_tanggal" id="stok_tanggal" class="form-control" required
-                                value="{{ old('stok_tanggal', date('Y-m-d\TH:i', strtotime($stok->stok_tanggal))) }}">
-                        <small id="error-stok_tanggal" class="error-text form-text text-danger"></small>
+                        <<input type="datetime-local" name="stok_tanggal_masuk" id="stok_tanggal_masuk" class="form-control" required
+                                value="{{ old('stok_tanggal_masuk', date('Y-m-d\TH:i', strtotime($stok->stok_tanggal_masuk))) }}">
+                        <small id="error-stok_tanggal_masuk" class="error-text form-text text-danger"></small>
                     </div>
                     <!-- Jumlah Stok -->
                     <div class="form-group">
@@ -102,11 +102,11 @@
                         required: true,
                         number: true
                     },
-                    id: {
+                    supplier_id: {
                         required: true,
                         number: true
                     },
-                    stok_tanggal: {
+                    stok_tanggal_masuk: {
                         required: true,
                         date: true
                     },

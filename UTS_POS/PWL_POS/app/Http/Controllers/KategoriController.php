@@ -376,4 +376,12 @@ class KategoriController extends Controller
 
     return $pdf->stream('Data Kategori_' . date('Y-m-d H:i:s') . '.pdf');
 }
+
+public function show_ajax(string $id)
+{
+    $kategori = KategoriModel::find($id);
+
+    return view('kategori.show_ajax', ['kategori' => $kategori]);
+}
+
 }

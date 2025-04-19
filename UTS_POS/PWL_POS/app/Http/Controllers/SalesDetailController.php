@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\BarangModel;
 use App\Models\PenjualanModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SalesDetailController extends Controller
 {
@@ -403,6 +404,19 @@ class SalesDetailController extends Controller
         exit;
         
     }
+    
+    public function export_pdf(){
+        $barang = PenjualanDetailModel::with('barang')
+                    ->select( 'penjualan_id', 'barang_id','harga_barang','jumlah_barang')
+                    ->orderBy('detail_id')
+                    ->get();
 
+        $pdf = Pdf::loadView('penjualan_detail.export_pdf', ['barang' => $barang]);
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->setOptions(['isRemoteEnabled' => true]);
+        $pdf->render();
+
+        return $pdf->stream('Data Penjualan-Detail_' . date('Y-m-d H:i:s') . '.pdf');
+    }
     
 }

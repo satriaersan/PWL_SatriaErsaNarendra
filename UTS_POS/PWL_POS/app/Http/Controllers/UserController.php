@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
             ->with('level');
-        
+
         // filter data user berdasarkan level_id
         if ($request->level_id) {
             $users->where('level_id', $request->level_id);
@@ -224,7 +224,7 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|string|min:3|unique:m_user,username',
                 'nama'     => 'required|string|max:100',
-                'password' => 'required|min:6'
+                'password' => 'required|min:5'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -533,5 +533,12 @@ class UserController extends Controller
             'status'  => true,
             'message' => 'Profil berhasil diperbarui'
         ]);
+    }
+
+    public function show_ajax(string $id)
+    {
+        $user = UserModel::find($id);
+
+        return view('user.show_ajax', ['user' => $user]);
     }
 }
