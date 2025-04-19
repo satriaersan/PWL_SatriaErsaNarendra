@@ -16,6 +16,7 @@ class StokSeeder extends Seeder
         $data = [
             [
                 'stok_id'          => 1,
+                'supplier_id'   => 1,
                 'barang_id'            => 11,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -23,6 +24,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 2,
+                'supplier_id'   => 1,
                 'barang_id'            => 22,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -30,6 +32,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 3,
+                'supplier_id'   => 1,
                 'barang_id'            => 33,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -37,6 +40,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 4,
+                'supplier_id'   => 1,
                 'barang_id'            => 44,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -44,6 +48,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 5,
+                'supplier_id'   => 1,
                 'barang_id'            => 55,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -51,6 +56,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 6,
+                'supplier_id'   => 1,
                 'barang_id'            => 66,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -58,6 +64,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 7,
+                'supplier_id'   => 1,
                 'barang_id'            => 77,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -65,6 +72,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 8,
+                'supplier_id'   => 1,
                 'barang_id'            => 88,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -72,6 +80,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 9,
+                'supplier_id'   => 1,
                 'barang_id'            => 98,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
@@ -79,6 +88,7 @@ class StokSeeder extends Seeder
             ],
             [
                 'stok_id'          => 10,
+                'supplier_id'   => 1,
                 'barang_id'            => 99,
                 'user_id'       => 1,
                 'stok_tanggal_masuk'        => now(),
