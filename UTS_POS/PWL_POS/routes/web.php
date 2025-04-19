@@ -310,7 +310,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::delete('/{id}', [BarangController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'stok'], function () {
+    Route::prefix('stok')->middleware(['authorize:ADM,MNG,STF'])->group(function () {
         Route::get('/', [StokController::class, 'index']);                // Menampilkan halaman awal user
         Route::post('/list', [StokController::class, 'list']);            // Menampilkan data user dalam bentuk json untuk datatable
         Route::get('/create_ajax', [StokController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
@@ -324,7 +324,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::delete('/{id}', [StokController::class, 'destroy']);       // Menghapus data user
     });
 
-    Route::group(['prefix' => 'penjualan'], function () {
+    Route::prefix('penjualan')->middleware(['authorize:ADM,MNG,STF'])->group(function () {
         Route::get('/', [SalesController::class, 'index']);                // Menampilkan halaman awal user
         Route::post('/list', [SalesController::class, 'list']);            // Menampilkan data user dalam bentuk json untuk datatable
         Route::get('/create_ajax', [SalesController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
@@ -338,7 +338,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
         Route::delete('/{id}', [SalesController::class, 'destroy']);       // Menghapus data user
     });
 
-    Route::group(['prefix' => 'penjualan_detail'], function () {
+    Route::prefix('penjualan_detail')->middleware(['authorize:ADM,MNG,STF'])->group(function () {
         Route::get('/', [SalesDetailController::class, 'index']);                // Menampilkan halaman awal user
         Route::post('/list', [SalesDetailController::class, 'list']);            // Menampilkan data user dalam bentuk json untuk datatable
         Route::get('/create_ajax', [SalesDetailController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
