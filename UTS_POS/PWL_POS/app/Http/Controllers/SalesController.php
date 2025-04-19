@@ -9,12 +9,15 @@ use App\Models\UserModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 ;
 
 class SalesController extends Controller
 {
     public function index()
     {
+        
         // $breadcrumb = (object)[
         //     'title' => 'Data Penjualan',
         //     'list' => ['Home', 'Penjualan']
@@ -299,5 +302,81 @@ class SalesController extends Controller
          return view('penjualan.show_ajax', ['penjualan' => $penjualan]);
      }
 
+     public function import()
+     {
+         return view('penjualan.import');
+     }
+ 
+     public function import_ajax(Request $request)
+     {
+         if ($request->ajax() || $request->wantsJson()) {
+             $rules = [
+                 'file_penjualan' => ['required', 'mimes:xlsx', 'max:4096'],
+             ];
+             $validator = Validator::make($request->all(), $rules);
+ 
+             if ($validator->fails()) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Validasi Gagal',
+                     'msgField' => $validator->errors(),
+                 ]);
+             }
+ 
+             $file = $request->file('file_penjualan');
+             $reader = IOFactory::createReader('Xlsx');
+             $reader->setReadDataOnly(true);
+             $spreadsheet = $reader->load($file->getRealPath());
+             $sheet = $spreadsheet->getActiveSheet();
+             $data = $sheet->toArray(null, false, true, true);
+             $insert = [];
+ 
+             if (count($data) > 1) {
+                 foreach ($data as $baris => $value) {
+                     if ($baris > 1) {
+                         $tanggal = $value['D'];
+         
+                         // Cek apakah kolom D adalah angka (mungkin format tanggal Excel)
+                         if (is_numeric($tanggal)) {
+                             // Format Excel serial number
+                             $tanggal = Date::excelToDateTimeObject($tanggal)->format('Y-m-d H:i:s');
+                         } else {
+                             // Format teks "14/04/2025 08:17:55"
+                             $date = \DateTime::createFromFormat('d/m/Y H:i:s', $tanggal);
+                             if ($date) {
+                                 $tanggal = $date->format('Y-m-d H:i:s');
+                             } else {
+                                 // Kalau gagal parsing, set null aja
+                                 $tanggal = null;
+                             }
+                         }
+                         $insert[] = [
+                             'user_id' => $value['A'],
+                             'pembeli' => $value['B'],
+                             'penjualan_kode' => $value['C'],
+                             'tanggal_penjualan' => $tanggal,
+                             'created_at' => now(),
+                         ];
+                     }
+                 }
+ 
+                 if (count($insert) > 0) {
+                     PenjualanModel::insertOrIgnore($insert);
+                 }
+ 
+                 return response()->json([
+                     'status' => true,
+                     'message' => 'Data berhasil diimport',
+                 ]);
+             } else {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Tidak ada data yang diimport',
+                 ]);
+             }
+         }
+ 
+         return redirect('/');
+     }
 
 }
