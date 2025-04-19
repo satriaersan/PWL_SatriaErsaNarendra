@@ -341,6 +341,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
         Route::get('/import', [SalesController::class, 'import']);                     //ajax form upload excel
         Route::post('/import_ajax', [SalesController::class, 'import_ajax']);          //ajax import excel
+        Route::get('/export_excel', [SalesController::class, 'export_excel']); // menampilkan halaman form tambah user Ajax
 
         Route::delete('/{id}', [SalesController::class, 'destroy']);       // Menghapus data user
     });

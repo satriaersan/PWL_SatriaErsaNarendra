@@ -379,4 +379,69 @@ class SalesController extends Controller
          return redirect('/');
      }
 
+     public function export_excel(){
+        // ambil data barang yang akan di export
+        $barang = PenjualanModel::with('user', 'detail.barang') // tambahkan barang di dalam detail
+                    ->select('penjualan_id', 'user_id', 'pembeli', 'penjualan_kode', 'tanggal_penjualan')
+                    ->orderBy('penjualan_id')
+                    ->get();
+
+        // load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Penjual');
+        $sheet->setCellValue('C1', 'Pembeli');
+        $sheet->setCellValue('D1', 'Harga');
+        $sheet->setCellValue('E1', 'Jumlah');
+        $sheet->setCellValue('F1', 'Total');
+        $sheet->setCellValue('G1', 'Kode Transaksi');
+        $sheet->setCellValue('H1', 'Tanggal Transaksi');
+
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true); // bold header
+
+        $no = 1;
+        $baris = 2;
+        foreach ($barang as $key => $value) {
+            foreach ($value->detail as $d) { // LOOP detail
+                $sheet->setCellValue('A' . $baris, $no);
+                $sheet->setCellValue('B' . $baris, $value->user->username);
+                $sheet->setCellValue('C' . $baris, $value->pembeli);
+                $sheet->setCellValue('D' . $baris, $d->harga); 
+                $sheet->setCellValue('E' . $baris, $d->jumlah); 
+                $sheet->setCellValue('F' . $baris, $d->harga * $d->jumlah);
+                $sheet->setCellValue('G' . $baris, $value->penjualan_kode);
+                $sheet->setCellValue('H' . $baris, $value->tanggal_penjualan);
+
+                $baris++;
+                $no++;
+            }
+        }
+
+
+        foreach (range('A', 'H') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); // set auto size untuk kolom
+        }
+
+        $sheet->setTitle('Data Penjualan'); // set title sheet
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx'); //Membuat “penulis” file Excel dalam format .xlsx
+        $filename = 'Data Penjualan_' . date('Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // memberi tahu bahwa ini adalah file excel
+        header('Content-Disposition: attachment;filename="' . $filename . '"'); //Memberi tau browser supaya file langsung di-download, bukan dibuka di browser.  
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1'); //Supaya browser tidak menyimpan versi lama dari file ini.
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); //Tanggal kadaluarsa file ini ditetapkan ke masa lalu → artinya file ini harus dianggap baru setiap saat.  
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // memberi tahu bahwa sekarang adaah terakhir modifikasi.
+        header('Cache-Control: cache, must-revalidate'); // File ini bisa di-cache, tapi harus diperiksa dulu ke server apakah ada versi terbaru.
+        header('Pragma: public'); //Boleh disimpan (public cache) di beberapa kasus, untuk dukung browser lama.
+
+        $writer->save('php://output');
+        exit;
+        
+    }
+
+
 }

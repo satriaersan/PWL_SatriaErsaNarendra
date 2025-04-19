@@ -5,7 +5,8 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
-            <button onclick="modalAction('{{ url('/penjualan/import') }}')" class="btn btn-info">Import Stok</button>
+            <button onclick="modalAction('{{ url('/penjualan/import') }}')" class="btn btn-info">Import </button>
+            <a class="btn btn-sm btn-primary mt-1" href="{{ url('penjualan/export_excel') }}"><i class="fa fa-file-excel"></i> Export Ecel</a>
             <button onclick="modalAction('{{ url('/penjualan/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
