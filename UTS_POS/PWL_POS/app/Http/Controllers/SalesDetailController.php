@@ -7,6 +7,7 @@ use App\Models\PenjualanDetailModel;
 use Illuminate\Support\Facades\Validator;
 use App\Models\BarangModel;
 use App\Models\PenjualanModel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SalesDetailController extends Controller
 {
@@ -284,4 +285,66 @@ class SalesDetailController extends Controller
 
         return view('penjualan_detail.show_ajax', ['penjualanDetail' => $penjualanDetail]);
     }
+
+    public function import()
+    {
+        return view('penjualan_detail.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_penjualanDetail' => ['required', 'mimes:xlsx', 'max:4096'],
+            ];
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_penjualanDetail');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+            $insert = [];
+
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) {
+                        $insert[] = [
+                            'penjualan_id' => $value['A'],
+                            'barang_id' => $value['B'],
+                            'harga_barang' => $value['C'],
+                            'jumlah_barang' => $value['D'],
+                            'created_at' => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    PenjualanDetailModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diimport',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport',
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
+    
 }

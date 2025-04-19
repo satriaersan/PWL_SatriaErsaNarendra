@@ -5,6 +5,7 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
+                <button onclick="modalAction('{{ url('/penjualan_detail/import') }}')" class="btn btn-info">Import Stok</button>
                 <button onclick="modalAction('{{ url('penjualan_detail/create_ajax') }}')"
                     class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
             </div>
@@ -16,7 +17,7 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            
+
             <!-- Filter Berdasarkan Barang -->
             <div class="row mb-3">
                 <div class="col-md-4">
