@@ -20,7 +20,7 @@
         @endif
 
         <!-- Filter Berdasarkan User -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12">
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Filter:</label>
@@ -35,14 +35,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <table class="table table-bordered table-striped table-hover table-sm" id="table_penjualan">
             <thead>
                 <tr>
                 <th>ID</th>
                 <th>Penjualan Kode</th>
-                <th>Nama User</th>
+                {{-- <th>Nama User</th> --}}
                 <th>Pembeli</th>
                 <th>Penjualan Tanggal</th>
                 <th>Aksi</th>
@@ -91,11 +91,11 @@
                 orderable: true,
                 searchable: true
             },
-            {
-                data: "user.nama",
-                orderable: false,
-                searchable: true
-            },
+            // {
+            //     data: "user.nama",
+            //     orderable: false,
+            //     searchable: true
+            // },
             {
                 data: "pembeli",
                 orderable: true,

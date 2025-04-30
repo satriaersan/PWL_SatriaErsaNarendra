@@ -51,6 +51,7 @@ class BarangController extends Controller
     
   return DataTables::of($barang)
     ->addIndexColumn()
+    
     ->addColumn('aksi', function ($barang) {
         $btn = '<div class="d-flex justify-content-center gap-1 flex-wrap">';
         $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button>';
@@ -169,7 +170,7 @@ class BarangController extends Controller
     public function create_ajax()
     {
         $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
-        return view('barang.create_ajax')->with('kategori', $kategori);
+        return view('barang.create_ajax', compact('kategori'));
     }
 
     public function store_ajax(Request $request)

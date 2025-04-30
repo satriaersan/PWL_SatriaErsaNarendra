@@ -1,4 +1,4 @@
-<form action="{{ url('/penjualan_detail/ajax') }}" method="POST" id="form-tambah">
+{{-- <form action="{{ url('/penjualan_detail/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -49,63 +49,62 @@
             </div>
         </div>
     </div>
-</form>
+</form> --}}
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <form action="{{ url('penjualan/ajax') }}" method="POST" id="form-tambah">
+            @csrf
+
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Penjualan Beserta Detailnya</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Data Penjualan -->
+                <div class="form-group">
+                    <label>Pembeli</label>
+                    <input type="text" name="pembeli" id="pembeli" class="form-control" required>
+                    <small id="error-pembeli" class="error-text form-text text-danger"></small>
+                </div>
+
+                <div class="form-group">
+                    <label>Kode Penjualan</label>
+                    <input type="text" name="penjualan_kode" id="penjualan_kode" class="form-control" required>
+                    <small id="error-penjualan_kode" class="error-text form-text text-danger"></small>
+                </div>
+
+                <!-- Bagian Detail Penjualan -->
+                <h5>Detail Penjualan</h5>
+                <table class="table" id="detailTable">
+                    <thead>
+                        <tr>
+                            <th>Barang</th>
+                            <th>Stok Tersedia</th>
+                            <th>Jumlah</th>
+                            <th>Harga (Otomatis)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- Baris detail akan ditambahkan secara dinamis --}}
+                    </tbody>
+                </table>
+                <button type="button" id="addDetail" class="btn btn-info mb-3">Tambah Barang</button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan Penjualan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-    // $(document).ready(function () {
-    //     $("#form-tambah").validate({
-    //         rules: {
-    //             penjualan_id: { required: true, minlength: 1, maxlength: 10 },
-    //             barang_id: { required: true, minlength: 1, maxlength: 10 },
-    //             harga_barang: { required: true, minlength: 1, maxlength: 100 },
-    //             jumlah_barang: { required: true, minlength: 1, maxlength: 100 },
-    //         },
-    //         submitHandler: function (form) {
-    //             $.ajax({
-    //                 url: form.action,
-    //                 type: form.method,
-    //                 data: $(form).serialize(),
-    //                 success: function (response) {
-    //                     if (response.status) {
-    //                         $('#myModal').modal('hide');
-    //                         Swal.fire({
-    //                             icon: 'success',
-    //                             title: 'Berhasil',
-    //                             text: response.message
-    //                         });
-    //                         dataSupplier.ajax.reload();
-    //                     } else {
-    //                         $('.error-text').text('');
-    //                         $.each(response.msgField, function (prefix, val) {
-    //                             $('#error-' + prefix).text(val[0]);
-    //                         });
-    //                         Swal.fire({
-    //                             icon: 'error',
-    //                             title: 'Terjadi Kesalahan',
-    //                             text: response.message
-    //                         });
-    //                     }
-    //                 }
-    //             });
-    //             return false;
-    //         },
-    //         errorElement: 'span',
-    //         errorPlacement: function (error, element) {
-    //             error.addClass('invalid-feedback');
-    //             element.closest('.form-group').append(error);
-    //         },
-    //         highlight: function (element, errorClass, validClass) {
-    //             $(element).addClass('is-invalid');
-    //         },
-    //         unhighlight: function (element, errorClass, validClass) {
-    //             $(element).removeClass('is-invalid');
-    //         }
-    //     });
-    //     $('#barang_id').on('change', function () {
-    //     var selected = $(this).find('option:selected');
-    //     var harga = selected.data('harga_barang') || 0; // default 0 kalau kosong
-    //     $('#harga').val(harga_barang);
-    //     });
-    // });
+   
     $(document).ready(function () {
         // Saat user memilih barang, isi harga
         $('#barang_id').on('change', function () {

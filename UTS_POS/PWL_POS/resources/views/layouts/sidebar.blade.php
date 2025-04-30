@@ -29,6 +29,7 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+            @if (Auth::check() && Auth::user()->level_id == 1 )
             <li class="nav-header">Data Pengguna</li>
             <li class="nav-item">
                 <a href="{{ url('/level') }}" class="nav-link {{ $activeMenu == 'level' ? 'active' : '' }}">
@@ -36,12 +37,19 @@
                     <p>Level User</p>
                 </a>
             </li>
+            @endif
+
+            @if (Auth::check() && Auth::user()->user_id == 1 || Auth::check() && Auth::user()->user_id == 2)
+            <li class="nav-header">Data Pengguna</li>
             <li class="nav-item">
                 <a href="{{ url('/user') }}" class="nav-link {{ $activeMenu == 'user' ? 'active' : '' }}">
                     <i class="nav-icon far fa-user"></i>
                     <p>Data User</p>
                 </a>
             </li>
+            @endif
+            
+            @if (Auth::check() && Auth::user()->kategori_id == 1 ||  Auth::user()->kategori_id == 2)
             <li class="nav-header">Data Barang</li>
             <li class="nav-item">
                 <a href="{{ url('/kategori') }}" class="nav-link {{ $activeMenu == 'kategori' ? 'active' : '' }}">
@@ -55,13 +63,20 @@
                     <p>Data Barang</p>
                 </a>
             </li>
+            @endif
+            </li>
+
+            @if (Auth::check() && Auth::user()->supplier_id == 1 || Auth::check() && Auth::user()->supplier_id == 2   )
             <li class="nav-header">Data Supplier</li>
             <li class="nav-item">
                 <a href="{{ url('/supplier') }}" class="nav-link {{ $activeMenu == 'supplier' ? 'active' : '' }}">
                     <i class="nav-icon fas fa-truck"></i>
                     <p>Data Supplier</p>
                 </a>
-            </li>
+            </li>  
+            @endif
+         
+         
             <li class="nav-header">Data Transaksi</li>
             <li class="nav-item">
                 <a href="{{ url('/stok') }}" class="nav-link {{ $activeMenu == 'stok' ? 'active' : '' }}">

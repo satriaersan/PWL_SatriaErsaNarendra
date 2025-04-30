@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\PenjualanModel;
+use App\Models\PenjualanDetailModel;
+use App\Models\StokModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -256,24 +258,123 @@ class SalesController extends Controller
     
     public function create_ajax()
     {
-        return view('penjualan.create_ajax');
+        $users = UserModel::all();
+        // $barangs = BarangModel::all();
+     
+        $barangs = BarangModel::with('stok')->get()->map(function($item) {
+            $item->barang_stok = $item->stok->sum('stok_jumlah');
+            return $item;
+        });
+        
+        return view('penjualan.create_ajax')->with(['users' => $users, 'barangs' => $barangs]);
     }
 
-    // Simpan data stok baru
-    public function store_ajax(Request $request)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
 
-            $rules = [
-                'pembeli'           => ['required', 'string', 'max:100'],
-                'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
-                'tanggal_penjualan' => ['required', 'date'],
-            ];
+    // Simpan data stok baru
+    // public function store_ajax(Request $request)
+    // {
+    //     if ($request->ajax() || $request->wantsJson()) {
+
+    //         $rules = [
+    //             'pembeli'           => ['required', 'string', 'max:100'],
+    //             'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
+    //             'tanggal_penjualan' => ['required', 'date'],
+    //         ];
             
 
 
-            $validator = Validator::make($request->all(), $rules);
+    //         $validator = Validator::make($request->all(), $rules);
 
+    //         if ($validator->fails()) {
+    //             return response()->json([
+    //                 'status'   => false,
+    //                 'message'  => 'Validasi gagal.',
+    //                 'msgField' => $validator->errors(),
+    //             ]);
+    //         }
+
+    //         $data = $request->all();
+    //         $data['user_id'] = auth()->id();
+
+    //         PenjualanModel::create($data);
+
+
+
+    //         return response()->json([
+    //             'status'  => true,
+    //             'message' => 'Data stok berhasil disimpan.',
+    //         ]);
+    //     }
+
+    //     // if ($request->ajax() || $request->wantsJson()) {
+    //     //     $rules = [
+    //     //         'pembeli'           => ['required', 'string', 'max:100'],
+    //     //         'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
+    //     //         'tanggal_penjualan' => ['required', 'date'],
+    //     //         'detail'            => ['required', 'array'],
+    //     //         'detail.*.barang_id'=> ['required', 'exists:m_barang,barang_id'],
+    //     //         'detail.*.jumlah'   => ['required', 'integer', 'min:1'],
+    //     //         'detail.*.harga'    => ['required', 'numeric'],
+    //     //     ];
+    
+    //     //     $validator = Validator::make($request->all(), $rules);
+    //     //     if ($validator->fails()) {
+    //     //         return response()->json([
+    //     //             'status' => false,
+    //     //             'message' => 'Validasi gagal',
+    //     //             'msgField' => $validator->errors(),
+    //     //         ]);
+    //     //     }
+    
+    //     //     DB::beginTransaction();
+    //     //     try {
+    //     //         $data = $request->only(['pembeli', 'penjualan_kode', 'tanggal_penjualan']);
+    //     //         $data['user_id'] = auth()->id();
+    
+    //     //         $penjualan = PenjualanModel::create($data);
+    
+    //     //         foreach ($request->detail as $d) {
+    //     //             PenjualanDetailModel::create([
+    //     //                 'penjualan_id' => $penjualan->penjualan_id,
+    //     //                 'barang_id'    => $d['barang_id'],
+    //     //                 'jumlah'       => $d['jumlah'],
+    //     //                 'harga'        => $d['harga'],
+    //     //             ]);
+    
+    //     //             // Kurangi stok barang
+    //     //             BarangModel::where('barang_id', $d['barang_id'])->decrement('stok', $d['jumlah']);
+    //     //         }
+    
+    //     //         DB::commit();
+    
+    //     //         return response()->json([
+    //     //             'status'  => true,
+    //     //             'message' => 'Transaksi berhasil disimpan dan stok dikurangi.',
+    //     //         ]);
+    //     //     } catch (\Throwable $e) {
+    //     //         DB::rollBack();
+    //     //         return response()->json([
+    //     //             'status' => false,
+    //     //             'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
+    //     //         ]);
+    //     //     }
+    //     // }
+    // }
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+    
+            $rules = [
+                'pembeli'              => ['required', 'string', 'max:100'],
+                'penjualan_kode'       => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
+                // 'details'              => ['required', 'array', 'min:1'],
+                // 'details.*.barang_id'  => ['required', 'exists:m_barang,barang_id'],
+                // 'details.*.jumlah'     => ['required', 'integer', 'min:1'],
+                // 'details.*.harga'      => ['required', 'numeric', 'min:0'],
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
             if ($validator->fails()) {
                 return response()->json([
                     'status'   => false,
@@ -281,20 +382,53 @@ class SalesController extends Controller
                     'msgField' => $validator->errors(),
                 ]);
             }
-
-            $data = $request->all();
-            $data['user_id'] = auth()->id();
-
-            PenjualanModel::create($data);
-
-
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Data stok berhasil disimpan.',
-            ]);
+    
+            DB::beginTransaction();
+            try {
+                $dataPenjualan = [
+                    'pembeli'           => $request->pembeli,
+                    'penjualan_kode'    => $request->penjualan_kode,
+                    'tanggal_penjualan' => now(),
+                    'user_id'           => auth()->id(),
+                ];
+    
+                $penjualan = PenjualanModel::create($dataPenjualan);
+    
+                foreach ($request->details as $detail) {
+                    PenjualanDetailModel::create([
+                        'penjualan_id' => $penjualan->penjualan_id,
+                        'barang_id'    => $detail['barang_id'],
+                        'jumlah_barang'       => $detail['jumlah_barang'],
+                        'harga_barang'        => $detail['harga'],
+                    ]);
+    
+                    // Update stok barang
+                    StokModel::where('barang_id', $detail['barang_id'])
+                        ->decrement('stok_jumlah', $detail['jumlah_barang']);
+                }
+    
+                DB::commit();
+    
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Transaksi berhasil disimpan dan stok dikurangi.',
+                ]);
+    
+            } catch (\Throwable $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Gagal menyimpan transaksi: ' . $e->getMessage(),
+                ]);
+            }
         }
+    
+        return response()->json([
+            'status'  => false,
+            'message' => 'Permintaan tidak valid.',
+        ]);
     }
+    
 
     public function show_ajax(string $id)
      {
@@ -394,11 +528,11 @@ class SalesController extends Controller
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Penjual');
         $sheet->setCellValue('C1', 'Pembeli');
-        $sheet->setCellValue('D1', 'Harga');
-        $sheet->setCellValue('E1', 'Jumlah');
-        $sheet->setCellValue('F1', 'Total');
-        $sheet->setCellValue('G1', 'Kode Transaksi');
-        $sheet->setCellValue('H1', 'Tanggal Transaksi');
+        // $sheet->setCellValue('D1', 'Harga');
+        // $sheet->setCellValue('E1', 'Jumlah');
+        // $sheet->setCellValue('F1', 'Total');
+        $sheet->setCellValue('D1', 'Kode Transaksi');
+        $sheet->setCellValue('E1', 'Tanggal Transaksi');
 
         $sheet->getStyle('A1:H1')->getFont()->setBold(true); // bold header
 
@@ -409,11 +543,11 @@ class SalesController extends Controller
                 $sheet->setCellValue('A' . $baris, $no);
                 $sheet->setCellValue('B' . $baris, $value->user->username);
                 $sheet->setCellValue('C' . $baris, $value->pembeli);
-                $sheet->setCellValue('D' . $baris, $d->harga); 
-                $sheet->setCellValue('E' . $baris, $d->jumlah); 
-                $sheet->setCellValue('F' . $baris, $d->harga * $d->jumlah);
-                $sheet->setCellValue('G' . $baris, $value->penjualan_kode);
-                $sheet->setCellValue('H' . $baris, $value->tanggal_penjualan);
+                // $sheet->setCellValue('D' . $baris, $d->harga); 
+                // $sheet->setCellValue('E' . $baris, $d->jumlah); 
+                // $sheet->setCellValue('F' . $baris, $d->harga * $d->jumlah);
+                $sheet->setCellValue('D' . $baris, $value->penjualan_kode);
+                $sheet->setCellValue('E' . $baris, $value->tanggal_penjualan);
 
                 $baris++;
                 $no++;
@@ -460,4 +594,5 @@ class SalesController extends Controller
     }
 
 
+    
 }

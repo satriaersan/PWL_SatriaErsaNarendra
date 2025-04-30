@@ -163,7 +163,7 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
 
 
     // Route::group(['prefix' => 'user'], function () {
-    Route::prefix('user')->middleware(['authorize:ADM'])->group(function () {
+    Route::prefix('user')->middleware(['authorize:ADM, MNG'])->group(function () {
         Route::get('/', [UserController::class, 'index']);          // menampilkan halaman awal user
         Route::post('/list', [UserController::class, 'list']);      // menampilkan data user dalam bentuk json untuk datatables
         Route::get('/create', [UserController::class, 'create']);   // menampilkan halaman form tambah user
